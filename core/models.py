@@ -90,18 +90,40 @@ class Profile(BaseModel):
     birthday = models.DateField(null=True)
     phone = models.CharField(null=True, max_length=11)
 
-    def __str__(self):
-        return self.user.email
+    def __unicode__(self):
+        return u'User: {} Profile: {}'.format(
+            self.user.first_name,
+            self.pk
+        )
 
 class Position(BaseModel):
     name = models.CharField(max_length=45)
 
+    def __unicode__(self):
+        return u'Position: {}'.format(
+            self.name
+        )
+
 class State(BaseModel):
     name = models.CharField(max_length=45)
+
+    def __unicode__(self):
+        return u'State: {}'.format(
+            self.name
+        )
 
 class City(BaseModel):
     state = models.ForeignKey(State, related_name='cities')
     name = models.CharField(max_length=45)
+
+    class Meta:
+        verbose_name_plural = "Cities"
+
+    def __unicode__(self):
+        return u'City: {} in State: {}'.format(
+            self.name,
+            self.state.name
+        )
 
 def logo_upload(instance, filename):
     prefix = 'teams/logo-%s-%s-%s'
@@ -118,17 +140,49 @@ class Team(BaseModel):
     foundation = models.DateField(null=True)
     president = models.CharField(max_length=50)
 
+    def __unicode__(self):
+        return u'Team: {}'.format(
+            self.name
+        )
+
 class Athlete(BaseModel):
     profile = models.ForeignKey(Profile)
     team = models.ForeignKey(Team)
     position = models.ForeignKey(Position)
+
+    def __unicode__(self):
+        return u'Athlete: {}'.format(
+            self.profile.user.first_name
+        )
 
 class Arena(BaseModel):
     name = models.CharField(max_length=50)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
 
+    def __unicode__(self):
+        return u'Arena: {}'.format(
+            self.name
+        )
+
 class Match(BaseModel):
     arena = models.ForeignKey(Arena, related_name='matches')
     home_team = models.ForeignKey(Team, related_name='home_matches')
     visitor_team = models.ForeignKey(Team, related_name='visitor_matches')
+    when = models.DateTimeField(null=False)
+
+    class Meta:
+        verbose_name_plural = 'Matches'
+
+    def __unicode__(self):
+        return u'Match: {}x{} in {}'.format(
+            self.home_team.name,
+            self.visitor_team.name,
+            self.arena.name
+        )
+
+class Participation(BaseModel):
+    athlete = models.ForeignKey(Athlete)
+    match = models.ForeignKey(Match)
+    going = models.BooleanField()
+    reason_not_going = models.CharField(max_length=140)

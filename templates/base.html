@@ -1,0 +1,29 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0;">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'gentelella/vendors/bootstrap/dist/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'gentelella/vendors/font-awesome/css/font-awesome.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'gentelella/vendors/iCheck/skins/flat/green.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'gentelella/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'gentelella/build/css/custom.min.css' %}" />
+
+    <title>VarzeaPro</title>
+  </head>
+
+  {% block body %}
+  <body class="nav-md">
+    {% block content %}
+    {% endblock content %}
+  </body>
+  {% endblock body %}
+
+  {% block js_scripts %}
+  <script type="text/javascript" src="{% static 'gentelella/build/js/custom.min.js' %}">
+  </script>
+  {% endblock js_scripts %}
+</html>
