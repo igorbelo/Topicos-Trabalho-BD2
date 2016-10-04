@@ -1,4 +1,94 @@
 {% extends "base.html" %}
 
-{% block content %}
-{% endblock content %}
+{% block body %}
+<body class="login">
+  <div>
+    <a class="hiddenanchor" id="signup"></a>
+    <a class="hiddenanchor" id="signin"></a>
+
+    <div class="login_wrapper">
+      <div class="animate form login_form">
+        <section class="login_content">
+          <form>
+            <h1>Entrar</h1>
+            <div>
+              <i style="font-size: 48px; margin-bottom: 20px; margin-right: 10px;" class="fa fa-facebook-official"></i>
+              <i style="font-size: 48px; margin-bottom: 20px; margin-right: 10px;" class="fa fa-google-plus-square"></i>
+              <i style="font-size: 48px; margin-bottom: 20px;" class="fa fa-twitter-square"></i>
+            </div>
+            <div>
+              <input type="text" class="form-control" placeholder="Usuário" required="" />
+            </div>
+            <div>
+              <input type="password" class="form-control" placeholder="Senha" required="" />
+            </div>
+            <div>
+              <a class="btn btn-default submit" href="index.html">Entrar</a>
+              <a class="reset_pass" href="#">Recuperar senha</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="separator">
+              <p class="change_link">
+                Não tem uma conta?
+                <a href="#signup" class="to_register"> Criar uma conta</a>
+              </p>
+              <div class="clearfix"></div>
+              <br />
+              <div>
+                <h1><i class="fa fa-soccer-ball-o"></i> VarzeaPro</h1>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <div id="register" class="animate form registration_form">
+        <section class="login_content">
+          <form>
+            <h1>Criar conta</h1>
+            <div>
+              <input type="text" class="form-control" placeholder="Primeiro Nome" required="" />
+            </div>
+            <div>
+              <input type="text" class="form-control" placeholder="Sobrenome" required="" />
+            </div>
+            <div>
+              <input type="email" class="form-control" placeholder="Email" required="" />
+            </div>
+            <div>
+              <input type="email" class="form-control" placeholder="Repetir Email" required="" />
+            </div>
+            <div>
+              <input type="password" class="form-control" placeholder="Senha" required="" />
+            </div>
+            <div>
+              <input type="password" class="form-control" placeholder="Repetir Senha" required="" />
+            </div>
+            <div>
+              <a class="btn btn-default submit" href="index.html">Criar</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="separator">
+              <p class="change_link">
+                Já está cadastrado?
+                <a href="#signin" class="to_register"> Entrar</a>
+              </p>
+
+              <div class="clearfix"></div>
+              <br />
+
+              <div>
+                <h1><i class="fa fa-soccer-ball-o"></i> VarzeaPro</h1>
+              </div>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock body %}
