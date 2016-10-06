@@ -5,3 +5,6 @@ static/
 components/
 #compiled python scripts
 *.pyc
+
+.DS_STORE
+media/

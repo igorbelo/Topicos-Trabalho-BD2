@@ -16,6 +16,8 @@ from settings_secret import *
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+MEDIA_ROOT = BASE_DIR + '/media/'
+MEDIA_URL = '/media/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -35,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djangobower',
+    'social.apps.django_app.default',
 
     'core',
 ]
@@ -62,12 +65,72 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
             ],
         },
     },
 ]
 
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email',
+}
+
 WSGI_APPLICATION = 'varzeapro.wsgi.application'
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend'
+)
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_PIPELINE = (
+    # Get the information we can about the user and return it in a simple
+    # format to create the user instance later. On some cases the details are
+    # already part of the auth response from the provider, but sometimes this
+    # could hit a provider API.
+    'social.pipeline.social_auth.social_details',
+
+    # Get the social uid from whichever service we're authing thru. The uid is
+    # the unique identifier of the given user in the provider.
+    'social.pipeline.social_auth.social_uid',
+
+    # Verifies that the current auth process is valid within the current
+    # project, this is where emails and domains whitelists are applied (if
+    # defined).
+    'social.pipeline.social_auth.auth_allowed',
+
+    # Checks if the current social-account is already associated in the site.
+    'social.pipeline.social_auth.social_user',
+
+    # Make up a username for this person, appends a random string at the end if
+    # there's any collision.
+    'social.pipeline.user.get_username',
+
+    # Send a validation email to the user to verify its email address.
+    # Disabled by default.
+    # 'social.pipeline.mail.mail_validation',
+
+    # Associates the current social details with another user account with
+    # a similar email address. Disabled by default.
+    # 'social.pipeline.social_auth.associate_by_email',
+
+    # Create a user account if we haven't found one yet.
+    'social.pipeline.user.create_user',
+
+    # Create the record that associates the social account with the user.
+    'social.pipeline.social_auth.associate_user',
+
+    # Populate the extra_data field in the social record with the values
+    # specified by settings (and the default ones like access_token, etc).
+    'social.pipeline.social_auth.load_extra_data',
+
+    # Update the user record with any changed info from the auth service.
+    'social.pipeline.user.user_details',
+
+    'core.utils.create_or_update_profile',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

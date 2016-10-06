@@ -9,21 +9,24 @@
     <div class="login_wrapper">
       <div class="animate form login_form">
         <section class="login_content">
-          <form>
+          <form method="POST" action="{% url 'web:login' %}">
+            {% csrf_token %}
             <h1>Entrar</h1>
             <div>
-              <i style="font-size: 48px; margin-bottom: 20px; margin-right: 10px;" class="fa fa-facebook-official"></i>
-              <i style="font-size: 48px; margin-bottom: 20px; margin-right: 10px;" class="fa fa-google-plus-square"></i>
-              <i style="font-size: 48px; margin-bottom: 20px;" class="fa fa-twitter-square"></i>
+              <a href="{% url 'social:begin' 'facebook' %}?next={% url 'web:index' %}">
+                <i style="font-size: 48px; margin-bottom: 20px;" class="fa fa-facebook-official"></i>
+              </a>
+              <!--i style="font-size: 48px; margin-bottom: 20px; margin-right: 10px;" class="fa fa-google-plus-square"></i>
+              <i style="font-size: 48px; margin-bottom: 20px;" class="fa fa-twitter-square"></i-->
             </div>
             <div>
-              <input type="text" class="form-control" placeholder="Usuário" required="" />
+              <input name="username" type="text" class="form-control" placeholder="Usuário" required="" />
             </div>
             <div>
-              <input type="password" class="form-control" placeholder="Senha" required="" />
+              <input name="password" type="password" class="form-control" placeholder="Senha" required="" />
             </div>
             <div>
-              <a class="btn btn-default submit" href="index.html">Entrar</a>
+              <input type="submit" value="Entrar" class="btn btn-default submit" />
               <a class="reset_pass" href="#">Recuperar senha</a>
             </div>
 
