@@ -4,7 +4,7 @@ from django.core.files.base import ContentFile
 
 from urllib2 import urlopen
 
-def create_or_update_profile(strategy, user, response, details, is_new=False, *args, **kwargs):
+def create_or_update_profile(backend, user, response, details, is_new=False, *args, **kwargs):
     email = details['email']
     user = User.objects.get(email=email)
 
@@ -12,7 +12,7 @@ def create_or_update_profile(strategy, user, response, details, is_new=False, *a
         user=user
     )
 
-    if is_new and strategy.backend.name == 'facebook':
+    if is_new and backend.name == 'facebook':
         url = 'http://graph.facebook.com/{0}/picture?width=320&height=320'.format(response['id'])
         photo = urlopen(url)
         profile.photo.save(

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djangobower',
     'social.apps.django_app.default',
+    'sorl.thumbnail',
 
     'core',
 ]
@@ -64,10 +65,13 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
                 'django.contrib.messages.context_processors.messages',
                 'social.apps.django_app.context_processors.backends',
                 'social.apps.django_app.context_processors.login_redirect',
             ],
+            'debug': DEBUG,
         },
     },
 ]
@@ -154,7 +158,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 
@@ -184,4 +188,7 @@ BOWER_INSTALLED_APPS = (
     'jquery#1.9',
     'bootstrap#3.3',
     'gentelella',
+    'bootstrap-daterangepicker',
+    'jquery-mask-plugin',
+    'select2'
 )

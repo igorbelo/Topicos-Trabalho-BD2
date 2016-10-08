@@ -89,6 +89,10 @@ class Profile(BaseModel):
         blank=True, null=True, upload_to=profile_photo_upload)
     birthday = models.DateField(null=True)
     phone = models.CharField(null=True, max_length=11)
+    teams = models.ManyToManyField(
+        'Team',
+        through='TeamAdmin'
+    )
 
     def __unicode__(self):
         return u'User: {} Profile: {}'.format(
@@ -120,10 +124,7 @@ class City(BaseModel):
         verbose_name_plural = "Cities"
 
     def __unicode__(self):
-        return u'City: {} in State: {}'.format(
-            self.name,
-            self.state.name
-        )
+        return u'{}'.format(self.name)
 
 def logo_upload(instance, filename):
     prefix = 'teams/logo-%s-%s-%s'
@@ -186,3 +187,7 @@ class Participation(BaseModel):
     match = models.ForeignKey(Match)
     going = models.BooleanField()
     reason_not_going = models.CharField(max_length=140)
+
+class TeamAdmin(BaseModel):
+    profile = models.ForeignKey(Profile)
+    team = models.ForeignKey(Team)
