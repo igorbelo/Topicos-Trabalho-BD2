@@ -1,6 +1,6 @@
 varzeapro/settings_secret.py
 #collected static files
-static/
+/static/
 #bower components
 components/
 #compiled python scripts

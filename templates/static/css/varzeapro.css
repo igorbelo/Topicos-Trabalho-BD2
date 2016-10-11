@@ -1,0 +1,15 @@
+.site_title i {
+    border: none;
+}
+
+.main_container .top_nav {
+    height: 58px;
+}
+
+img.upload-from-image {
+    cursor: pointer;
+}
+
+.invisible-input {
+    visibility: hidden;
+}
