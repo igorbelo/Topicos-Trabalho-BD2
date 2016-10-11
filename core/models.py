@@ -76,9 +76,8 @@ class PasswordReset(BaseModel):
     is_active = models.BooleanField(default=True)
 
 def profile_photo_upload(instance, filename):
-    prefix = 'profiles/user-%s-%s-%s'
+    prefix = 'profiles/user-%s-%s'
     return prefix % (
-        instance.pk,
         slugify(instance.user.first_name),
         filename)
 
@@ -127,19 +126,17 @@ class City(BaseModel):
         return u'{}'.format(self.name)
 
 def logo_upload(instance, filename):
-    prefix = 'teams/logo-%s-%s-%s'
+    prefix = 'teams/logo-%s-%s'
     return prefix % (
-        instance.pk,
         slugify(instance.name),
         filename)
 
 class Team(BaseModel):
     city = models.ForeignKey(City, related_name='teams')
-    logo = models.ImageField(
-        blank=True, null=True, upload_to=logo_upload)
+    logo = models.ImageField(blank=True, null=True, upload_to=logo_upload)
     name = models.CharField(max_length=50)
     foundation = models.DateField(null=True)
-    president = models.CharField(max_length=50)
+    president = models.CharField(max_length=50, null=True, blank=True)
 
     def __unicode__(self):
         return u'Team: {}'.format(

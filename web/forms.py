@@ -16,5 +16,5 @@ class TeamForm(ModelForm):
                 attrs={'class': 'form-control datepicker'}
             ),
             'city': forms.Select(attrs={'class': 'select2_single form-control', 'tabindex': '-1'}),
-            'president': forms.TextInput(attrs={'class': 'form-control col-md-7 col-xs-12'}),
+            'president': forms.TextInput(attrs={'class': 'form-control col-md-7 col-xs-12'})
         }

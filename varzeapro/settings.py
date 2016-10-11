@@ -19,6 +19,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = BASE_DIR + '/media/'
 MEDIA_URL = '/media/'
 
+MEDIA_TMP_DIR = MEDIA_ROOT + 'tmp/'
+MEDIA_TMP_URL = MEDIA_URL + 'tmp'
+TMP_DIR = '/var/tmp'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
