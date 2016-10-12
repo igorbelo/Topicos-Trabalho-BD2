@@ -20,7 +20,7 @@ MEDIA_ROOT = BASE_DIR + '/media/'
 MEDIA_URL = '/media/'
 
 MEDIA_TMP_DIR = MEDIA_ROOT + 'tmp/'
-MEDIA_TMP_URL = MEDIA_URL + 'tmp'
+MEDIA_TMP_URL = MEDIA_URL + 'tmp/'
 TMP_DIR = '/var/tmp'
 
 # Quick-start development settings - unsuitable for production
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
 
     'core',
+    'web',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social.apps.django_app.context_processors.backends',
                 'social.apps.django_app.context_processors.login_redirect',
+                'varzeapro.context_processors.tmp_media'
             ],
             'debug': DEBUG,
         },

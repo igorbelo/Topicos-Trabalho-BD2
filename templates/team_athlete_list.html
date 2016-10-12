@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block sidebar %}
+{% include "partials/team_sidebar.html" %}
+{% endblock sidebar %}
+
+{% block content %}
+<div class="page-title">
+  <h3>Atletas {{ team.name }}</h3>
+</div>
+<a class="btn btn-success">+ Novo Atleta</a>
+<div class="clearfix"></div>
+<div class="table-responsive">
+  <table class="table table-striped jambo_table bulk_action">
+    <thead>
+      <tr class="headings">
+        <th class="column-title">Atleta</th>
+        <th class="column-title">Posição</th>
+        <th class="column-title">Telefone</th>
+        <th class="column-title no-link last"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for athlete in athlete_list %}
+      <tr class="even pointer">
+        <td class=" ">{{ athlete.name }} {{ athlete.last_name }}</td>
+        <td class=" ">{{ athlete.position.name }}</td>
+        <td class=" ">
+          {% if athlete.phone %}
+          <a href="tel:{{ athlete.phone }}">{{ athlete.phone }}</a>
+          {% else %}
+          -
+          {% endif %}
+        </td>
+        <td class=" last"><a href="#" class="btn-sm btn-primary">Editar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

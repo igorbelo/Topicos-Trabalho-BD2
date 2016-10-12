@@ -1,0 +1,8 @@
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+  <ul class="nav side-menu" style="">
+    <li><a href="{% url 'web:index' %}"><i class="fa fa-angle-double-left"></i> Voltar</a>
+    </li>
+    <li><a href="{% url 'web:team' team.id %}"><i class="fa fa-shield"></i> {{ team.name }}</a></li>
+    <li><a href="{% url 'web:team_athlete_list' team.id %}"><i class="fa fa-user"></i> Atletas</a></li>
+  </ul>
+</div>

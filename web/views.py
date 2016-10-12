@@ -5,15 +5,15 @@ from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView, CreateView
 from django.views.generic.edit import UpdateView
+from django.views.generic.list import ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
-from core.models import Team
+from core.models import Team, TeamAdmin, Athlete
 from web.forms import TeamForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from sorl.thumbnail import get_thumbnail
-from django.core.files import File
 
 import uuid
 from varzeapro import settings
@@ -22,6 +22,20 @@ class LoginRequired(LoginRequiredMixin):
     login_url = 'web:login'
     redirect_field_name = None
 
+class TeamAthleteList(LoginRequired, ListView):
+    model = Athlete
+    template_name = "team_athlete_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(TeamAthleteList, self).get_context_data(**kwargs)
+        context['team'] = Team.objects.get(pk=self.kwargs['pk'])
+        return context
+
+    def get_queryset(self):
+        return Athlete.objects.filter(
+            team_id = self.kwargs['pk']
+        )
+
 class ShowTeam(LoginRequired, DetailView):
     model = Team
     template_name = "team.html"
@@ -29,21 +43,26 @@ class ShowTeam(LoginRequired, DetailView):
 class UpdateTeam(LoginRequired, UpdateView):
     form_class = TeamForm
     model = Team
-    template_name = "edit_team.html"
+    template_name = "change_team.html"
+
+    def get_success_url(self):
+        return reverse('web:team', args=(self.object.id,))
 
 class CreateTeam(LoginRequired, CreateView):
     success_message = 'Seu time foi criado com sucesso'
     form_class = TeamForm
     model = Team
-    template_name = "new_team.html"
+    template_name = "add_team.html"
 
     def form_valid(self, form):
-        if self.request.POST['logo_file_name'] != '':
-            form.instance.logo = File(
-                open(settings.MEDIA_TMP_DIR+self.request.POST['logo_file_name']),
-                self.request.POST['logo_file_name']
-            )
-        return super(CreateTeam, self).form_valid(form)
+        response = super(CreateTeam, self).form_valid(form)
+
+        TeamAdmin.objects.create(
+            profile=self.request.user.profile,
+            team=self.object
+        )
+
+        return response
 
     def get_success_url(self):
         return reverse('web:team', args=(self.object.id,))

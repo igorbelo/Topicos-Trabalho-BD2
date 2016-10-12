@@ -31,6 +31,7 @@
             <br>
 
             <!-- sidebar menu -->
+            {% block sidebar %}
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
               <ul class="nav side-menu" style="">
                 <li><a href="{% url 'web:index' %}"><i class="fa fa-home"></i> Início <!--span class="fa fa-chevron-down"></span--></a>
@@ -38,12 +39,15 @@
                 <li><a><i class="fa fa-calendar"></i> Jogos</a></li>
                 <li><a><i class="fa fa-shield"></i> Meus Times <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                    <li><a href="#">Porto da Vila</a></li>
+                    {% for team in request.user.profile.teams.all %}
+                    <li><a href="{% url 'web:team' team.id %}">{{ team.name }}</a></li>
+                    {% endfor %}
                   </ul>
                 </li>
                 <li><a href="{% url 'web:create_team' %}"><i class="fa fa-plus"></i> Novo Time</a></li>
               </ul>
             </div>
+            {% endblock sidebar %}
             <!-- /sidebar menu -->
           </div>
         </div>

@@ -1,10 +1,24 @@
-{% load staticfiles %}
+{% load staticfiles thumbnail %}
 
 <div class="form-group">
   <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+    {% if team and team.logo %}
+    {% thumbnail team.logo "120x120" crop="center" as im %}
+    <img class="upload-from-image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+    {% endthumbnail %}
+    {% else %}
+    {% if form.logo_file_name.value %}
+    {% with MEDIA_TMP_DIR|add:form.logo_file_name.value as file %}
+    {% thumbnail file "120x120" crop="center" as im %}
+    <img class="upload-from-image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+    {% endthumbnail %}
+    {% endwith %}
+    {% else %}
     <img class="upload-from-image" src="{% static 'images/team-logo-placeholder.png' %}" />
-    <input type="hidden" name="logo_file_name" id="logo_file_name" />
-    <input type="file" id="file" name="file" class="invisible-input auto-upload" data-target-input-id="logo_file_name" />
+    {% endif %}
+    {% endif %}
+    {{ form.logo_file_name }}
+    <input type="file" id="file" name="file" class="invisible-input auto-upload" data-target-input-id="{{ form.logo_file_name.auto_id }}" />
   </div>
 </div>
 <div class="form-group {% if form.name.errors %}bad{% endif %}">

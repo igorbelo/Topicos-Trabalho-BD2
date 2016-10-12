@@ -1,14 +1,44 @@
 {% extends "base.html" %}
+{% load staticfiles thumbnail %}
+
+{% block sidebar %}
+{% include "partials/team_sidebar.html" %}
+{% endblock sidebar %}
 
 {% block content %}
-<div id="w1" class="alert alert-success fade in">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-  <h4><i class="fa fa-check"></i>&nbsp;Success!</h4>Success alert preview. This alert is dismissable.
-</div>
-<div class="page-title">
-  <div class="title_left">
-    <h3>{{ object.name }}</h3>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_content">
+        <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
+          <div class="profile_img">
+            <!-- end of image cropping -->
+            <div id="crop-avatar">
+              <!-- Current avatar -->
+              {% thumbnail object.logo "221x221" crop="center" as im %}
+              <img class="img-responsive avatar-view" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="Avatar" title="Change the avatar">
+              {% endthumbnail %}
+            </div>
+            <!-- end of image cropping -->
+
+          </div>
+          <h3>{{ object.name }}</h3>
+
+          <ul class="list-unstyled user_data">
+            <li><i class="fa fa-map-marker user-profile-icon"></i> {{ object.city.name }}, {{ object.city.state.name }}
+            </li>
+            {% if object.president %}
+            <li><i class="fa fa-suitcase user-profile-icon"></i> {{ object.president }}
+            </li>
+            {% endif %}
+          </ul>
+          <a class="btn btn-success" href="{% url 'web:update_team' object.id %}"><i class="fa fa-edit m-right-xs"></i>Editar</a>
+        </div>
+        <div class="col-md-9 col-sm-9 col-xs-12">
+          jogos, etc
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div class="clearfix"></div>
 {% endblock content %}

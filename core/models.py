@@ -93,6 +93,9 @@ class Profile(BaseModel):
         through='TeamAdmin'
     )
 
+    def is_admin(self, team):
+        return team in teams
+
     def __unicode__(self):
         return u'User: {} Profile: {}'.format(
             self.user.first_name,
@@ -145,8 +148,23 @@ class Team(BaseModel):
 
 class Athlete(BaseModel):
     profile = models.ForeignKey(Profile)
-    team = models.ForeignKey(Team)
+    team = models.ForeignKey(Team, related_name='athletes')
     position = models.ForeignKey(Position)
+
+    @property
+    def name(self):
+        return u'{} {}'.format(
+            self.profile.user.first_name,
+            self.profile.user.last_name
+        )
+
+    @property
+    def email(self):
+        return self.profile.user.email
+
+    @property
+    def phone(self):
+        return self.profile.phone
 
     def __unicode__(self):
         return u'Athlete: {}'.format(
