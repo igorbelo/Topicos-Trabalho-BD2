@@ -35,7 +35,7 @@ $(document).ready(function() {
 
     $('.datepicker').mask('00/00/0000');
 
-    $(".select2_single").select2({
+    $(".select2_single.select-city").select2({
         placeholder: "Selecione uma cidade",
         allowClear: true,
         language: {

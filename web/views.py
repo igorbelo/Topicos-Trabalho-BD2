@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from core.models import Team, TeamAdmin, Athlete
-from web.forms import TeamForm
+from web.forms import TeamForm, AthleteForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from sorl.thumbnail import get_thumbnail
@@ -22,18 +22,72 @@ class LoginRequired(LoginRequiredMixin):
     login_url = 'web:login'
     redirect_field_name = None
 
-class TeamAthleteList(LoginRequired, ListView):
+class UpdateAthlete(LoginRequired, UpdateView):
     model = Athlete
-    template_name = "team_athlete_list.html"
+    form_class = AthleteForm
+    template_name = "change_athlete.html"
+
+    def get_initial(self):
+        return {
+            'first_name': self.object.profile.user.first_name,
+            'last_name': self.object.profile.user.last_name,
+            'email': self.object.profile.user.email,
+            'phone': self.object.profile.phone
+        }
 
     def get_context_data(self, **kwargs):
-        context = super(TeamAthleteList, self).get_context_data(**kwargs)
-        context['team'] = Team.objects.get(pk=self.kwargs['pk'])
+        context = super(UpdateAthlete, self).get_context_data(**kwargs)
+        context['team'] = Team.objects.get(pk=self.kwargs['team_id'])
+
+        return context
+
+    def get_success_url(self):
+        return reverse('web:athlete_list', args=(self.kwargs['team_id'],))
+
+    def get_form_kwargs(self):
+        kwargs = super(UpdateAthlete, self).get_form_kwargs()
+        kwargs['team_id'] = self.kwargs['team_id']
+
+        return kwargs
+
+class CreateAthlete(LoginRequired, CreateView):
+    model = Athlete
+    form_class = AthleteForm
+    template_name = "add_athlete.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateAthlete, self).get_context_data(**kwargs)
+        context['team'] = Team.objects.get(pk=self.kwargs['team_id'])
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        team = context['team']
+        form.team = team
+
+        return super(CreateAthlete, self).form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(CreateAthlete, self).get_form_kwargs()
+        kwargs['team_id'] = self.kwargs['team_id']
+
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('web:athlete_list', args=(self.kwargs['team_id'],))
+
+class AthleteList(LoginRequired, ListView):
+    model = Athlete
+    template_name = "athlete_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AthleteList, self).get_context_data(**kwargs)
+        context['team'] = Team.objects.get(pk=self.kwargs['team_id'])
         return context
 
     def get_queryset(self):
         return Athlete.objects.filter(
-            team_id = self.kwargs['pk']
+            team_id = self.kwargs['team_id']
         )
 
 class ShowTeam(LoginRequired, DetailView):

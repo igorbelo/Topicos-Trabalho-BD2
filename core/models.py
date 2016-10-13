@@ -106,9 +106,7 @@ class Position(BaseModel):
     name = models.CharField(max_length=45)
 
     def __unicode__(self):
-        return u'Position: {}'.format(
-            self.name
-        )
+        return u'{}'.format(self.name)
 
 class State(BaseModel):
     name = models.CharField(max_length=45)
@@ -165,6 +163,10 @@ class Athlete(BaseModel):
     @property
     def phone(self):
         return self.profile.phone
+
+    @property
+    def photo(self):
+        return self.profile.photo
 
     def __unicode__(self):
         return u'Athlete: {}'.format(

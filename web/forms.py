@@ -1,8 +1,10 @@
 from django import forms
 from django.forms import ModelForm
-from core.models import Team, City
+from django.contrib.auth.models import User
+from core.models import Team, City, Athlete, Profile, Position
 from django.core.files import File
 from varzeapro import settings
+from django.db import transaction
 
 class TeamForm(ModelForm):
     logo_file_name = forms.CharField(
@@ -22,7 +24,7 @@ class TeamForm(ModelForm):
             'foundation': forms.DateInput(
                 attrs={'class': 'form-control datepicker'}
             ),
-            'city': forms.Select(attrs={'class': 'select2_single form-control', 'tabindex': '-1'}),
+            'city': forms.Select(attrs={'class': 'select2_single form-control select-city', 'tabindex': '-1'}),
             'president': forms.TextInput(attrs={'class': 'form-control col-md-7 col-xs-12'}),
         }
 
@@ -38,5 +40,93 @@ class TeamForm(ModelForm):
 
         if commit:
             instance.save()
+
+        return instance
+
+class AthleteForm(ModelForm):
+    photo_file_name = forms.CharField(
+        widget=forms.HiddenInput(),
+        required=False
+    )
+    email = forms.CharField(
+        widget=forms.TextInput({'class': 'form-control'})
+    )
+    first_name = forms.CharField(
+        widget=forms.TextInput({'class': 'form-control'})
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput({'class': 'form-control'}),
+        required=False
+    )
+    phone = forms.CharField(
+        widget=forms.TextInput({'class': 'form-control'}),
+        required=False
+    )
+
+    class Meta:
+        model = Athlete
+        fields = ['position']
+        position = forms.ModelChoiceField(
+            queryset=Position.objects.all()
+        )
+        widgets = {
+            'position': forms.Select(attrs={'class': 'form-control'})
+        }
+
+    def __init__(self, team_id, *args, **kwargs):
+        self.team_id = team_id
+        super(AthleteForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        instance = super(AthleteForm, self).save(commit=False)
+        photo_file_name = self.cleaned_data.get('photo_file_name', None)
+        email = self.cleaned_data.get('email', None)
+        first_name = self.cleaned_data.get('first_name', None)
+        last_name = self.cleaned_data.get('last_name', None)
+        phone = self.cleaned_data.get('phone', None)
+
+        with transaction.atomic():
+            if not instance.id:
+                user = User.objects.create(
+                    username = email,
+                    first_name = first_name,
+                    last_name = last_name,
+                    email = email
+                )
+
+                profile = Profile(
+                    user = user,
+                    phone = phone
+                )
+
+                if photo_file_name:
+                    profile.photo = File(
+                        open(settings.MEDIA_TMP_DIR+photo_file_name),
+                        photo_file_name
+                    )
+
+                profile.save()
+
+                instance.profile = profile
+                instance.team_id = self.team_id
+            else:
+                profile = instance.profile
+
+                if photo_file_name:
+                    profile.photo = File(
+                        open(settings.MEDIA_TMP_DIR+photo_file_name),
+                        photo_file_name
+                    )
+
+                user = profile.user
+                user.first_name = first_name
+                user.last_name = last_name
+                user.email = email
+                user.save()
+                profile.phone = phone
+                profile.save()
+
+            if commit:
+                instance.save()
 
         return instance

@@ -9,7 +9,7 @@
 <div class="page-title">
   <h3>Atletas {{ team.name }}</h3>
 </div>
-<a class="btn btn-success">+ Novo Atleta</a>
+<a class="btn btn-success" href="{% url 'web:create_athlete' team.id %}">+ Novo Atleta</a>
 <div class="clearfix"></div>
 <div class="table-responsive">
   <table class="table table-striped jambo_table bulk_action">
@@ -34,7 +34,7 @@
           -
           {% endif %}
         </td>
-        <td class=" last"><a href="#" class="btn-sm btn-primary">Editar</a>
+        <td class=" last"><a href="{% url 'web:update_athlete' team.id athlete.id %}" class="btn-sm btn-primary">Editar</a>
         </td>
       </tr>
       {% endfor %}

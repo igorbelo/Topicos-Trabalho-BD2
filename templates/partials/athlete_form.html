@@ -1,0 +1,63 @@
+{% load staticfiles thumbnail %}
+
+<div class="form-group">
+  <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+    {% if athlete and athlete.photo %}
+    {% thumbnail athlete.photo "120x120" crop="center" as im %}
+    <img class="upload-from-image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+    {% endthumbnail %}
+    {% else %}
+    {% if form.photo_file_name.value %}
+    {% with MEDIA_TMP_DIR|add:form.photo_file_name.value as file %}
+    {% thumbnail file "120x120" crop="center" as im %}
+    <img class="upload-from-image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" />
+    {% endthumbnail %}
+    {% endwith %}
+    {% else %}
+    <img class="upload-from-image" src="{% static 'images/user.png' %}" width="120" height="120" />
+    {% endif %}
+    {% endif %}
+    {{ form.photo_file_name }}
+    <input type="file" id="file" name="file" class="invisible-input auto-upload" data-target-input-id="{{ form.photo_file_name.auto_id }}" />
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="{{ form.first_name.auto_id }}">Nome <span class="required">*</span>
+  </label>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    {{ form.first_name }}
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_name">Sobrenome
+  </label>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    {{ form.last_name }}
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_name">Email <span class="required">*</span>
+  </label>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    {{ form.email }}
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_name">Telefone
+  </label>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    {{ form.phone }}
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="id_name">Posição <span class="required">*</span>
+  </label>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    {{ form.position }}
+  </div>
+</div>

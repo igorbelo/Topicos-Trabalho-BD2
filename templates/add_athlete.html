@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+{% include "partials/team_sidebar.html" %}
+{% endblock sidebar %}
+
+{% block content %}
+<div class="page-title">
+  <div class="title_left">
+    <h3>Novo Atleta</h3>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_content">
+        <br>
+        <form method="POST" action="" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="">{% csrf_token %}
+          {% include 'partials/athlete_form.html' %}
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+              <a class="btn btn-primary" href="{% url 'web:athlete_list' team.id %}">Cancelar</a>
+              <button type="submit" class="btn btn-success">Salvar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
