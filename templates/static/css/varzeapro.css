@@ -13,3 +13,7 @@ img.upload-from-image {
 .invisible-input {
     visibility: hidden;
 }
+
+.daterangepicker_input > .calendar-time {
+    text-align: center;
+}

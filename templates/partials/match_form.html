@@ -1,0 +1,38 @@
+{% load staticfiles thumbnail %}
+<div class="form-group">
+  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="{{ form.home.auto_id }}">{{ form.home }} Seu time é o mandante?</label>
+</div>
+<div class="ln_solid"></div>
+<table class="row">
+  <td class="col-md-4 col-xs-4 home-team" style="text-align: center;">
+    <span class="image">
+      <img src="{% static 'images/team-no-logo.png' %}" width="100" height="100" />
+    </span>
+    <div class="clearfix"></div>
+    <span style="font-size: 14px;">Porto da Vila</span>
+  </td>
+  <td class="col-md-4 col-xs-4" style="text-align: center;">
+    <!--span style="font-size: 36px;">4 </span-->
+    <span style="font-size: 24px;">&times; </span>
+    <!--span style="font-size: 36px;">1</span-->
+  </td>
+  <td class="col-md-4 col-xs-4 visitor-team" style="text-align: center;">
+    <span class="image">
+      <img src="{% static 'images/team-no-logo.png' %}" width="100" height="100" />
+    </span>
+    <div class="clearfix"></div>
+    <span style="font-size: 14px;">Borussia</span>
+  </td>
+</table>
+<div class="form-group">
+  <label class="control-label col-md-3 col-sm-3 col-xs-12">Local</label>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    {{ form.arena }}
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label col-md-3 col-sm-3 col-xs-12">Data</label>
+  <div class="col-md-6 col-sm-6 col-xs-12">
+    {{ form.when }}
+  </div>
+</div>

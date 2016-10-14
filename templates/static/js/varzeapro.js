@@ -33,7 +33,26 @@ $(document).ready(function() {
         maxDate: new Date()
     });
 
+    $('.datetimepicker').daterangepicker({
+        singleDatePicker: true,
+        timePicker: true,
+        timePicker24Hour: true,
+        locale: {
+            format: "DD/MM/YYYY HH:mm",
+            daysOfWeek: [
+                "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"
+            ],
+            monthNames: [
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ],
+            cancelLabel: 'Cancelar',
+            applyLabel: 'Aplicar'
+        },
+        maxDate: new Date()
+    });
+
     $('.datepicker').mask('00/00/0000');
+    $('.datetimepicker').mask('00/00/0000 00:00');
 
     $(".select2_single.select-city").select2({
         placeholder: "Selecione uma cidade",
@@ -41,6 +60,16 @@ $(document).ready(function() {
         language: {
             noResults: function() {
                 return "Nenhuma cidade encontrada";
+            }
+        }
+    });
+
+    $(".select2_single.select-arena").select2({
+        placeholder: "Selecione um local",
+        allowClear: true,
+        language: {
+            noResults: function() {
+                return "Nenhum local encontrado";
             }
         }
     });

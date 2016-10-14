@@ -147,7 +147,7 @@ class Team(BaseModel):
 class Athlete(BaseModel):
     profile = models.ForeignKey(Profile)
     team = models.ForeignKey(Team, related_name='athletes')
-    position = models.ForeignKey(Position)
+    position = models.ForeignKey(Position, related_name='athletes')
 
     @property
     def name(self):
@@ -179,9 +179,7 @@ class Arena(BaseModel):
     longitude = models.FloatField(null=True)
 
     def __unicode__(self):
-        return u'Arena: {}'.format(
-            self.name
-        )
+        return u'{}'.format(self.name)
 
 class Match(BaseModel):
     arena = models.ForeignKey(Arena, related_name='matches')
@@ -198,6 +196,15 @@ class Match(BaseModel):
             self.visitor_team.name,
             self.arena.name
         )
+
+class StatType(BaseModel):
+    name = models.CharField(max_length=50)
+
+class MatchStat(BaseModel):
+    match = models.ForeignKey(Match, related_name='stats')
+    team = models.ForeignKey(Team, null=True)
+    athlete = models.ForeignKey(Athlete, null=True)
+    type = models.ForeignKey(StatType)
 
 class Participation(BaseModel):
     athlete = models.ForeignKey(Athlete)

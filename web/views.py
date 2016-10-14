@@ -9,8 +9,8 @@ from django.views.generic.list import ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
-from core.models import Team, TeamAdmin, Athlete
-from web.forms import TeamForm, AthleteForm
+from core.models import Team, TeamAdmin, Athlete, Match
+from web.forms import TeamForm, AthleteForm, MatchForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from sorl.thumbnail import get_thumbnail
@@ -21,6 +21,17 @@ from varzeapro import settings
 class LoginRequired(LoginRequiredMixin):
     login_url = 'web:login'
     redirect_field_name = None
+
+class CreateMatch(LoginRequired, CreateView):
+    model = Match
+    form_class = MatchForm
+    template_name = "add_match.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateMatch, self).get_context_data(**kwargs)
+        context['team'] = Team.objects.get(pk=self.kwargs['team_id'])
+
+        return context
 
 class UpdateAthlete(LoginRequired, UpdateView):
     model = Athlete

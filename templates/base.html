@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'gentelella/build/css/custom.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'gentelella/vendors/animate.css/animate.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'gentelella/vendors/select2/dist/css/select2.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'gentelella/vendors/switchery/dist/switchery.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/varzeapro.css' %}" />
 
     <title>VarzeaPro</title>
@@ -36,7 +37,6 @@
               <ul class="nav side-menu" style="">
                 <li><a href="{% url 'web:index' %}"><i class="fa fa-home"></i> Início <!--span class="fa fa-chevron-down"></span--></a>
                 </li>
-                <li><a><i class="fa fa-calendar"></i> Jogos</a></li>
                 <li><a><i class="fa fa-shield"></i> Meus Times <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
                     {% for team in request.user.profile.teams.all %}
@@ -136,6 +136,7 @@
   <script type="text/javascript" src="{% static 'bootstrap-daterangepicker/daterangepicker.js' %}"></script>
   <script type="text/javascript" src="{% static 'jquery-mask-plugin/dist/jquery.mask.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'select2/dist/js/select2.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'gentelella/vendors/iCheck/icheck.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/varzeapro.js' %}"></script>
   {% endblock js_scripts %}
 </html>

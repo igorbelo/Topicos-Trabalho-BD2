@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from core.models import Team, City, Athlete, Profile, Position
+from core.models import Team, City, Athlete, Profile, Position, Match
 from django.core.files import File
 from varzeapro import settings
 from django.db import transaction
@@ -130,3 +130,21 @@ class AthleteForm(ModelForm):
                 instance.save()
 
         return instance
+
+class MatchForm(ModelForm):
+    home = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class':'flat'}),
+        required = False
+    )
+
+    class Meta:
+        model = Match
+        fields = ['arena', 'home_team', 'visitor_team', 'when']
+        widgets = {
+            'when': forms.DateInput(
+                attrs={'class': 'form-control datetimepicker'}
+            ),
+            'arena': forms.Select(
+                attrs={'class': 'form-control select2_single select-arena'}
+            )
+        }
