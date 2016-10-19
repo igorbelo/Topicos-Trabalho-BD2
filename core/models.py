@@ -83,7 +83,7 @@ def profile_photo_upload(instance, filename):
 
 class Profile(BaseModel):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, related_name='profile')
+        settings.AUTH_USER_MODEL, related_name='profile', db_constraint=False)
     photo = models.ImageField(
         blank=True, null=True, upload_to=profile_photo_upload)
     birthday = models.DateField(null=True)
@@ -133,7 +133,7 @@ def logo_upload(instance, filename):
         filename)
 
 class Team(BaseModel):
-    city = models.ForeignKey(City, related_name='teams')
+    city = models.ForeignKey(City, related_name='teams', db_constraint=False)
     logo = models.ImageField(blank=True, null=True, upload_to=logo_upload)
     name = models.CharField(max_length=50)
     foundation = models.DateField(null=True)
@@ -145,9 +145,9 @@ class Team(BaseModel):
         )
 
 class Athlete(BaseModel):
-    profile = models.ForeignKey(Profile)
-    team = models.ForeignKey(Team, related_name='athletes')
-    position = models.ForeignKey(Position, related_name='athletes')
+    profile = models.ForeignKey(Profile, db_constraint=False)
+    team = models.ForeignKey(Team, related_name='athletes', db_constraint=False)
+    position = models.ForeignKey(Position, related_name='athletes', db_constraint=False)
 
     @property
     def name(self):

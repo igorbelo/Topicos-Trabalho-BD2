@@ -4,3 +4,4 @@ Pillow==3.0.0
 django-bower==5.2.0
 python-social-auth==0.2.21
 sorl-thumbnail==12.4a1
+tqdm
