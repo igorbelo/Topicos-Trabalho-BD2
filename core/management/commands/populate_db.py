@@ -10,18 +10,26 @@ import uuid
 from tqdm import tqdm
 from datetime import datetime, timedelta
 from random import randint
+from multiprocessing import Process
+from django import db
 
 NUMBER_OF_STATES = 26
 NUMBER_OF_CITIES = 70
-NUMBER_OF_TEAMS = 10000
+NUMBER_OF_TEAMS = 1000
 NUMBER_OF_ATHLETES_IN_TEAM = 11
 NUMBER_OF_ATHLETES = NUMBER_OF_TEAMS * NUMBER_OF_ATHLETES_IN_TEAM
 NUMBER_OF_ARENAS = 20
-NUMBER_OF_MATCHES = 2000000
+NUMBER_OF_MATCHES = 200000
 POSITIONS_LIST = (
     'Goleiro','Lateral','Zagueiro','Volante','Meio-campo','Atacante'
 )
 fake = Faker()
+
+def bulk_create_matches(matches):
+    Match.objects.bulk_create(matches)
+
+def bulk_create_stats(stats):
+    MatchStat.objects.bulk_create(stats)
 
 def random_date(start, end):
     return start + timedelta(
@@ -137,23 +145,25 @@ class Command(BaseCommand):
         # matches
         print "criando partidas..."
         matches = []
+        stats = []
         for i in tqdm(range(0,NUMBER_OF_MATCHES)):
-            team_index = int(
+            home_team_index = int(
                 math.floor(i/200)
             )
-            random_team_index = randint(0,NUMBER_OF_TEAMS-1)
-            if random_team_index == team_index:
-                if random_team_index == 0:
-                    random_team_index += 1
+            visitor_team_index = randint(0,NUMBER_OF_TEAMS-1)
+            if visitor_team_index == team_index:
+                if visitor_team_index == 0:
+                    visitor_team_index += 1
                 else:
-                    random_team_index -= 1
+                    visitor_team_index -= 1
 
-            if i % 2 == 0:
-                home_team = self.teams[team_index]
-                visitor_team = self.teams[random_team_index]
-            else:
-                home_team = self.teams[random_team_index]
-                visitor_team = self.teams[team_index]
+            if i % 2 != 0:
+                c = home_team_index
+                home_team_index = visitor_team_index
+                visitor_team_index = c
+
+            home_team_id = home_team_index+1
+            visitor_team_id = visitor_team_index+1
 
             arena = arenas[randint(0,NUMBER_OF_ARENAS-1)]
             d1 = datetime.strptime('1/1/2010 7:00 AM', '%m/%d/%Y %I:%M %p')
@@ -162,9 +172,88 @@ class Command(BaseCommand):
             matches.append(
                 Match(
                     arena = arena,
-                    home_team = home_team,
-                    visitor_team = visitor_team,
+                    home_team_id = home_team_id,
+                    visitor_team_id = visitor_team_id,
                     when = when
                 )
             )
-        Match.objects.bulk_create(matches)
+            home_team_score = randint(0,7)
+            visitor_team_score = randint(0,7)
+            for j in range(home_team_score):
+                if randint(0,20) == 5:
+                    start_index_athlete = visitor_team_index * 11
+                    end_index_athlete = start_index_athlete + 10
+                    random_athlete_id = randint(start_index_athlete, end_index_athlete)+1
+                    stats.append(
+                        MatchStat(
+                            match_id = i+1,
+                            team_id = visitor_team_id,
+                            athlete_id = random_athlete_id,
+                            type = stat_types[1]
+                        )
+                    )
+                else:
+                    start_index_athlete = home_team_index * 11
+                    end_index_athlete = start_index_athlete + 10
+                    random_athlete_id = randint(start_index_athlete, end_index_athlete)+1
+                    stats.append(
+                        MatchStat(
+                            match_id = i+1,
+                            team_id = home_team_id,
+                            athlete_id = random_athlete_id,
+                            type = stat_types[0]
+                        )
+                    )
+
+            for j in range(visitor_team_score):
+                if randint(0,20) == 5:
+                    start_index_athlete = home_team_index * 11
+                    end_index_athlete = start_index_athlete + 10
+                    random_athlete_id = randint(start_index_athlete, end_index_athlete)+1
+                    stats.append(
+                        MatchStat(
+                            match_id = i+1,
+                            team_id = home_team_id,
+                            athlete_id = random_athlete_id,
+                            type = stat_types[1]
+                        )
+                    )
+                else:
+                    start_index_athlete = visitor_team_index * 11
+                    end_index_athlete = start_index_athlete + 10
+                    random_athlete_id = randint(start_index_athlete, end_index_athlete)+1
+                    stats.append(
+                        MatchStat(
+                            match_id = i+1,
+                            team_id = visitor_team_id,
+                            athlete_id = random_athlete_id,
+                            type = stat_types[0]
+                        )
+                    )
+
+        processes = []
+        db.connections.close_all()
+
+        for i in range(4):
+            start_index = i * (NUMBER_OF_MATCHES/4)
+            end_index = start_index + (NUMBER_OF_MATCHES/4)
+            matches_range = matches[start_index:end_index]
+            p = Process(target=bulk_create_matches, args=(matches_range,))
+            p.start()
+            processes.append(p)
+
+        for p in processes:
+            p.join()
+
+        print "criando resultados..."
+        stats_length = len(stats)
+        for i in range(4):
+            start_index = i * (stats_length/4)
+            end_index = start_index + (stats_length/4)
+            stats_range = stats[start_index:end_index]
+            p = Process(target=bulk_create_stats, args=(stats_range,))
+            p.start()
+            processes.append(p)
+
+        for p in processes:
+            p.join()
