@@ -6,7 +6,7 @@ Igor Belo
 ## 2 INTRODUÇÃO E MOTIVAÇAO
 O **VarzeaPro** é um sistema que auxilia o gerenciamento de times de futebol da várzea.
 
-O **VarzeaPro** nasceu da ideia de atender às necessidades de administradores dos clubes. Atividades como gerenciamento de atletas, marcação de jogos, geração de estatísticas e controle de presença em partidas não é uma tarefa trivial sem uma ferramenta que centralize todas essas atividades.
+O **VarzeaPro** nasceu da ideia de atender às necessidades de administradores dos clubes. Atividades como gerenciamento de atletas, marcação de jogos, geração de estatísticas e controle de presença em partidas não são triviais sem uma ferramenta que centralize todas essas atividades.
 
 ## 3 MINI-MUNDO
 Descrever o mini-mundo. Não deve ser maior do que 30 linhas
