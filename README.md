@@ -18,19 +18,7 @@ VarzeaPro é um sistema voltado para administradores de equipes de várzea. O us
 ### 5.1 NOTACAO ENTIDADE RELACIONAMENTO
 ![modelo conceitual](./conceitual.jpg "Modelo Conceitual")
 ### 5.2 DECISÕES DE PROJETO
-    [atributo]: [descrição da decisão]
-
-    EXEMPLO:
-    a) Campo endereço: em nosso projeto optamos por um campo multivalorado e composto, pois a empresa
-    pode possuir para cada departamento mais de uma localização...
-    b) justifique!
-
-### 5.3 DESCRIÇÃO DOS DADOS
-    [objeto]: [descrição do objeto]
-
-    EXEMPLO:
-    CLIENTE: Tabela que armazena as informações relativas ao cliente<br>
-    CPF: campo que armazena o número de Cadastro de Pessoa Física para cada cliente da empresa.<br>
+    Estatísticas da Partida: A decisão de colocar as estatísticas é para garantir uma certa escalabilidade. Futuramente caso sejam necessárias novas estatísticas novas colunas não precisam ser criadas. Além disso, garante que as estatísticas possam se relacionar com dados/tabelas, por exemplo: qual o tempo de jogo em que ocorreu um evento? A princípio essa informação não é armazenada mas facilmente adicionada sem muitos efeitos colaterais e "workarounds".
 
 ## 6 MODELO LÓGICO
 ![modelo lógico](./logico.jpg "Modelo Lógico")
@@ -38,16 +26,37 @@ VarzeaPro é um sistema voltado para administradores de equipes de várzea. O us
 ![modelo fisico](./fisico.png "Modelo Físico")
 ## 8 INSERT APLICADO NAS TABELAS DO BANCO DE DADOS
 ### 8.1 DETALHAMENTO DAS INFORMAÇÕES
-        Detalhamento sobre as informações e processo de obtenção ou geração dos dados.
-        Referenciar todas as fontes referentes a :
-        a) obtenção dos dados
-        b) obtenção de códigos reutilizados
-        c) fontes de estudo para desenvolvimento do projeto
+Após clonar o projeto, crie um arquivo `settings_secret.py` no diretório [varzeapro](https://github.com/igorbelo/varzeapro/tree/master/varzeapro) e insira os dados de conexão do banco e uma `SECRET_KEY` da seguinte forma:
+```
+SECRET_KEY = '[string aleatória]'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '[NOME_DO_BANCO]', # tem que estar criado
+        'USER': '[USUARIO]',
+        'PASSWORD': '[SENHA]',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+```
+
+Instale as dependências do projeto com o comando:
+```
+pip install -r requirements.txt
+```
+
+Por fim, execute o comando que irá criar as tabelas
+```
+python manage.py migrate
+```
 
 ### 8.2 INCLUSÃO DO SCRIPT PARA CRIAÇÃO DE TABELA E INSERÇÃO DOS DADOS
-        a) inclusão das instruções para criação das tabelas e estruturas de amazenamento do BD
-        b) inclusão das instruções de inserção dos dados nas referidas tabelas
-        c) inclusão das instruções para execução de outros procedimentos necessários
+Para popular o banco, execute o comando:
+```
+python manage.py populate_db
+```
 
 ## 9 TABELAS E PRINCIPAIS CONSULTAS
 ### 9.1	GERACAO DE DADOS (MÍNIMO DE 1,5 MILHÃO DE REGISTROS PARA PRINCIPAL RELAÇAO)
