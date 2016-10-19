@@ -12,11 +12,11 @@ O **VarzeaPro** nasceu da ideia de atender às necessidades de administradores d
 VarzeaPro é um sistema voltado para administradores de equipes de várzea. O usuário realiza um cadastro fornecendo informações básicas ou realizando através do Facebook. Um usuário pode criar times. Um time possui logo, nome, cidade, data de fundação e presidente. O administrador pode adicionar outros administradores para gerenciarem os times. O administrador adiciona atletas ao seu time, sendo que cada atleta possui nome, e-mail, telefone e posição. Um atleta pode estar em mais de um time e com informações diferentes. Por exemplo, um atleta pode ser conhecido por um apelido em um time e por outro em outro time. O administrador pode cadastrar partidas do seu time, tanto passadas quanto futuras, sendo que uma partida possui uma arena (local), o time mandante, o visitante, data e hora. Além disso a partida pode ter estatísticas relacionadas a ela (gol, gol contra, cartão amarelo, cartão vermelho). Uma estatística de partida está relacionada a um time e a um atleta. Quando a partida futura é criada, os atletas da equipe recebem uma notificação para confirmarem a presença ou ausência na partida. Caso opte por se ausentar, o atleta pode justificar sua ausência.
 
 ## 4 RASCUNHOS BÁSICOS DA INTERFACE (MOCKUPS)
-[Link dos mockups](https://github.com/igorbelo/varzeapro/blob/master/mockups.bmpr)
+[Link dos mockups](./mockups.bmpr)
 
 ## 5 MODELO CONCEITUAL
 ### 5.1 NOTACAO ENTIDADE RELACIONAMENTO
-
+![modelo conceitual](./conceitual.jpg "Modelo Conceitual")
 ### 5.2 DECISÕES DE PROJETO
     [atributo]: [descrição da decisão]
 
@@ -33,8 +33,9 @@ VarzeaPro é um sistema voltado para administradores de equipes de várzea. O us
     CPF: campo que armazena o número de Cadastro de Pessoa Física para cada cliente da empresa.<br>
 
 ## 6 MODELO LÓGICO
+![modelo lógico](./logico.jpg "Modelo Lógico")
 ## 7 MODELO FÍSICO
-
+![modelo fisico](./fisico.png "Modelo Físico")
 ## 8 INSERT APLICADO NAS TABELAS DO BANCO DE DADOS
 ### 8.1 DETALHAMENTO DAS INFORMAÇÕES
         Detalhamento sobre as informações e processo de obtenção ou geração dos dados.
@@ -48,7 +49,7 @@ VarzeaPro é um sistema voltado para administradores de equipes de várzea. O us
         b) inclusão das instruções de inserção dos dados nas referidas tabelas
         c) inclusão das instruções para execução de outros procedimentos necessários
 
-## 9	TABELAS E PRINCIPAIS CONSULTAS
+## 9 TABELAS E PRINCIPAIS CONSULTAS
 ### 9.1	GERACAO DE DADOS (MÍNIMO DE 1,5 MILHÃO DE REGISTROS PARA PRINCIPAL RELAÇAO)
     Data de Entrega: 19/10/2016
 
@@ -78,8 +79,8 @@ Data de Entrega: 09/11/2016
     a) aplicação de algoritmos e interpretação dos resultados
     Data de Entrega: 16/11/2016
 
-## 10	ATUALIZAÇÃO DA DOCUMENTAÇÃO/ SLIDES E ENTREGA FINAL
+## 10 ATUALIZAÇÃO DA DOCUMENTAÇÃO/ SLIDES E ENTREGA FINAL
 
     Data de Entrega: 23/11/2016
 
-## 11	DIFICULDADES ENCONTRADAS PELO GRUPO
+## 11 DIFICULDADES ENCONTRADAS PELO GRUPO
