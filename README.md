@@ -46,7 +46,6 @@ Instale as dependências do projeto com o comando:
 ```
 pip install -r requirements.txt
 ```
-
 Por fim, execute o comando que irá criar as tabelas
 ```
 python manage.py migrate
