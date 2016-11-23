@@ -59,22 +59,52 @@ python manage.py populate_db
 
 ## 9 TABELAS E PRINCIPAIS CONSULTAS
 ### 9.1	GERACAO DE DADOS (MÍNIMO DE 1,5 MILHÃO DE REGISTROS PARA PRINCIPAL RELAÇAO)
-    Data de Entrega: 19/10/2016
+```
+python manage.py populate_db
+```
 
 ### 9.2	SELECT DAS TABELAS COM PRIMEIROS 10 REGISTROS INSERIDOS
-    Data de Entrega: 26/10/2016
+``` sql
+SELECT * FROM auth_user LIMIT 10; --retorna os 10 primeiros usuários
+SELECT * FROM core_profile LIMIT 10; --retorna os 10 primeiros perfis
+SELECT * FROM core_athlete LIMIT 10; --retorna os 10 primeiros atletas
+SELECT * FROM core_team LIMIT 10; --retorna os 10 primeiros times
+SELECT * FROM core_arena LIMIT 10; --retorna as 10 primeiras arenas (locais de jogo)
+SELECT * FROM core_match LIMIT 10; --retorna as 10 primeiras partidas
+SELECT * FROM core_matchstat LIMIT 10; --retorna as 10 primeiras estatísticas das partidas
+SELECT * FROM core_participation LIMIT 10; --retorna as 10 primeiras participações em jogos
+SELECT * FROM core_state LIMIT 10; --retorna os 10 primeiros estados
+SELECT * FROM core_city LIMIT 10; --retorna as 10 primeiras cidades
+```
 
 ### 9.3	SELECT DAS VISÕES COM PRIMEIROS 10 REGISTROS DA VIEW
-    Data de Entrega: 26/10/2016
+``` sql
+-- atletas com mais gols marcados
+CREATE OR REPLACE VIEW vw_athlete_score AS
+SELECT (auth_user.first_name || ' ' || auth_user.last_name) AS athlete_name, core_team.name AS team_name, COUNT(core_matchstat.athlete_id) AS score_total FROM core_athlete
+INNER JOIN core_profile ON (core_athlete.profile_id = core_profile.id)
+INNER JOIN auth_user ON (core_profile.user_id = auth_user.id)
+INNER JOIN core_team ON (core_athlete.team_id = core_team.id)
+INNER JOIN core_matchstat ON (core_athlete.id = core_matchstat.athlete_id)
+INNER JOIN core_stattype ON (core_matchstat.type_id = core_stattype.id)
+WHERE core_stattype.name = 'goal'
+GROUP BY auth_user.first_name,
+auth_user.last_name,
+core_team.name,
+core_matchstat.athlete_id
+ORDER BY score_total DESC;
+
+-- times com mais gols marcados
+CREATE OR REPLACE VIEW vw_team_score AS
+SELECT core_team.name AS team_name, COUNT(core_matchstat.team_id) AS score_total FROM core_team
+INNER JOIN core_matchstat ON (core_team.id = core_matchstat.team_id)
+INNER JOIN core_stattype ON (core_matchstat.type_id = core_stattype.id)
+WHERE core_stattype.name = 'goal'
+GROUP BY core_team.name
+ORDER BY score_total DESC;
+```
 
 ### 9.4	LISTA DE CODIGOS DAS FUNÇÕES, ASSERÇOES E TRIGGERS
-        Detalhamento sobre funcionalidade de cada código.
-        a) Objetivo
-        b) Código do objeto (função/trigger/asserção)
-        c) exemplo de dados para aplicação
-        d) resultados em forma de tabela/imagem
-
-Data de Entrega: 09/11/2016
 
 ### 9.5	APLICAÇAO DE ÍNDICES E TESTES DE PERFORMANCE
     a) Lista de índices, tipos de índices com explicação de porque foram implementados
@@ -87,7 +117,7 @@ Data de Entrega: 09/11/2016
     a) aplicação de algoritmos e interpretação dos resultados
     Data de Entrega: 16/11/2016
 
-## 10 ATUALIZAÇÃO DA DOCUMENTAÇÃO/ SLIDES E ENTREGA FINAL
+## 10 ATUALIZAÇÃO DA DOCUMENTAÇÃO/SLIDES E ENTREGA FINAL
 
     Data de Entrega: 23/11/2016
 
