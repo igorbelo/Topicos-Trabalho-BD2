@@ -215,3 +215,11 @@ class Participation(BaseModel):
 class TeamAdmin(BaseModel):
     profile = models.ForeignKey(Profile)
     team = models.ForeignKey(Team)
+
+class Attribute(BaseModel):
+    name = models.CharField(max_length=50)
+
+class AthleteAttribute(BaseModel):
+    athlete = models.ForeignKey(Athlete, related_name='attributes')
+    attribute = models.ForeignKey(Attribute)
+    value = models.FloatField()

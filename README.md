@@ -114,8 +114,13 @@ ORDER BY score_total DESC;
     Data de Entrega: 16/11/2016
 
 ### 9.6	ANÁLISE DOS DADOS COM ORANGE
-    a) aplicação de algoritmos e interpretação dos resultados
-    Data de Entrega: 16/11/2016
+![posição x físico](./posicao-fisico.png "Posição X Físico")
+![posição x inteligência](./posicao-inteligencia.png "Posição X Inteligência")
+![posição x técnica](./posicao-tecnica.png "Posição X Técnica")
+![posição x velocidade](./posicao-velocidade.png "Posição X Velocidade")
+![posição x gols](./posicao-gols.png "Posição X Gols")
+![árvore de decisão: posição por físico e inteligência](./posicao-fisico-inteligencia.png "Posição por físico e inteligência")
+![árvore de decisão: posição por gols](./posicao-gols-btree.png "Posição por gols")
 
 ## 10 ATUALIZAÇÃO DA DOCUMENTAÇÃO/SLIDES E ENTREGA FINAL
 
