@@ -102,6 +102,26 @@ INNER JOIN core_stattype ON (core_matchstat.type_id = core_stattype.id)
 WHERE core_stattype.name = 'goal'
 GROUP BY core_team.name
 ORDER BY score_total DESC;
+
+-- atributos do atleta com a posição e quantidade de gols marcados
+CREATE OR REPLACE VIEW vw_athlete_score_with_attributes_and_position AS
+SELECT
+    (SELECT core_athleteattribute.value FROM core_athleteattribute INNER JOIN core_attribute ON (core_athleteattribute.attribute_id = core_attribute.id) WHERE core_attribute.name = 'speed' AND core_athleteattribute.athlete_id = core_athlete.id
+    ) AS speed,
+    (SELECT core_athleteattribute.value FROM core_athleteattribute INNER JOIN core_attribute ON (core_athleteattribute.attribute_id = core_attribute.id) WHERE core_attribute.name = 'technique' AND core_athleteattribute.athlete_id = core_athlete.id
+    ) AS technique,
+    (SELECT core_athleteattribute.value FROM core_athleteattribute INNER JOIN core_attribute ON (core_athleteattribute.attribute_id = core_attribute.id) WHERE core_attribute.name = 'intelligence' AND core_athleteattribute.athlete_id = core_athlete.id
+    ) AS intelligence,
+    (SELECT core_athleteattribute.value FROM core_athleteattribute INNER JOIN core_attribute ON (core_athleteattribute.attribute_id = core_attribute.id) WHERE core_attribute.name = 'physique' AND core_athleteattribute.athlete_id = core_athlete.id
+    ) AS physique,
+    core_position.name AS athlete_position,
+    count(core_matchstat.athlete_id) AS score_count,
+    core_athlete.id AS athlete_id
+FROM core_athlete
+INNER JOIN core_position ON (core_athlete.position_id = core_position.id)
+INNER JOIN core_matchstat ON (core_athlete.id = core_matchstat.athlete_id)
+WHERE core_matchstat.type_id = 1
+GROUP BY core_athlete.id, speed, technique, intelligence, physique, athlete_position;
 ```
 
 ### 9.4	LISTA DE CODIGOS DAS FUNÇÕES, ASSERÇOES E TRIGGERS
