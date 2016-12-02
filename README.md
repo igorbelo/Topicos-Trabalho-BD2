@@ -23,7 +23,290 @@ VarzeaPro é um sistema voltado para administradores de equipes de várzea. O us
 ## 6 MODELO LÓGICO
 ![modelo lógico](./logico.jpg "Modelo Lógico")
 ## 7 MODELO FÍSICO
-![modelo fisico](./fisico.png "Modelo Físico")
+
+``` sql
+BEGIN;
+--
+-- Create model Arena
+--
+CREATE TABLE "core_arena" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(50) NOT NULL, "latitude" double precision NULL, "longitude" double precision NULL);
+--
+-- Create model Athlete
+--
+CREATE TABLE "core_athlete" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL);
+--
+-- Create model City
+--
+CREATE TABLE "core_city" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(45) NOT NULL);
+--
+-- Create model Match
+--
+CREATE TABLE "core_match" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "when" timestamp with time zone NOT NULL, "arena_id" integer NOT NULL);
+--
+-- Create model MatchStat
+--
+CREATE TABLE "core_matchstat" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "athlete_id" integer NULL, "match_id" integer NOT NULL);
+--
+-- Create model Participation
+--
+CREATE TABLE "core_participation" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "going" boolean NOT NULL, "reason_not_going" varchar(140) NOT NULL, "athlete_id" integer NOT NULL, "match_id" integer NOT NULL);
+--
+-- Create model PasswordReset
+--
+CREATE TABLE "core_passwordreset" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "token" varchar(128) NOT NULL UNIQUE, "is_active" boolean NOT NULL, "user_id" integer NOT NULL);
+--
+-- Create model Position
+--
+CREATE TABLE "core_position" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(45) NOT NULL);
+--
+-- Create model Profile
+--
+CREATE TABLE "core_profile" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "photo" varchar(100) NULL, "birthday" date NULL, "phone" varchar(11) NULL);
+--
+-- Create model State
+--
+CREATE TABLE "core_state" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(45) NOT NULL);
+--
+-- Create model StatType
+--
+CREATE TABLE "core_stattype" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(50) NOT NULL);
+--
+-- Create model Team
+--
+CREATE TABLE "core_team" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "logo" varchar(100) NULL, "name" varchar(50) NOT NULL, "foundation" date NULL, "president" varchar(50) NULL, "city_id" integer NOT NULL);
+--
+-- Create model TeamAdmin
+--
+CREATE TABLE "core_teamadmin" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "profile_id" integer NOT NULL, "team_id" integer NOT NULL);
+--
+-- Add field teams to profile
+--
+--
+-- Add field user to profile
+--
+ALTER TABLE "core_profile" ADD COLUMN "user_id" integer NOT NULL UNIQUE;
+ALTER TABLE "core_profile" ALTER COLUMN "user_id" DROP DEFAULT;
+--
+-- Add field team to matchstat
+--
+ALTER TABLE "core_matchstat" ADD COLUMN "team_id" integer NULL;
+ALTER TABLE "core_matchstat" ALTER COLUMN "team_id" DROP DEFAULT;
+--
+-- Add field type to matchstat
+--
+ALTER TABLE "core_matchstat" ADD COLUMN "type_id" integer NOT NULL;
+ALTER TABLE "core_matchstat" ALTER COLUMN "type_id" DROP DEFAULT;
+--
+-- Add field home_team to match
+--
+ALTER TABLE "core_match" ADD COLUMN "home_team_id" integer NOT NULL;
+ALTER TABLE "core_match" ALTER COLUMN "home_team_id" DROP DEFAULT;
+--
+-- Add field visitor_team to match
+--
+ALTER TABLE "core_match" ADD COLUMN "visitor_team_id" integer NOT NULL;
+ALTER TABLE "core_match" ALTER COLUMN "visitor_team_id" DROP DEFAULT;
+--
+-- Add field state to city
+--
+ALTER TABLE "core_city" ADD COLUMN "state_id" integer NOT NULL;
+ALTER TABLE "core_city" ALTER COLUMN "state_id" DROP DEFAULT;
+--
+-- Add field position to athlete
+--
+ALTER TABLE "core_athlete" ADD COLUMN "position_id" integer NOT NULL;
+ALTER TABLE "core_athlete" ALTER COLUMN "position_id" DROP DEFAULT;
+--
+-- Add field profile to athlete
+--
+ALTER TABLE "core_athlete" ADD COLUMN "profile_id" integer NOT NULL;
+ALTER TABLE "core_athlete" ALTER COLUMN "profile_id" DROP DEFAULT;
+--
+-- Add field team to athlete
+--
+ALTER TABLE "core_athlete" ADD COLUMN "team_id" integer NOT NULL;
+ALTER TABLE "core_athlete" ALTER COLUMN "team_id" DROP DEFAULT;
+ALTER TABLE "core_match" ADD CONSTRAINT "core_match_arena_id_ef50445f_fk_core_arena_id" FOREIGN KEY ("arena_id") REFERENCES "core_arena" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_match_b297cc0f" ON "core_match" ("arena_id");
+ALTER TABLE "core_matchstat" ADD CONSTRAINT "core_matchstat_athlete_id_9ffcd6fd_fk_core_athlete_id" FOREIGN KEY ("athlete_id") REFERENCES "core_athlete" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "core_matchstat" ADD CONSTRAINT "core_matchstat_match_id_f729a9fd_fk_core_match_id" FOREIGN KEY ("match_id") REFERENCES "core_match" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_matchstat_975a0aa5" ON "core_matchstat" ("athlete_id");
+CREATE INDEX "core_matchstat_ff9c4e4a" ON "core_matchstat" ("match_id");
+ALTER TABLE "core_participation" ADD CONSTRAINT "core_participation_athlete_id_6b115b03_fk_core_athlete_id" FOREIGN KEY ("athlete_id") REFERENCES "core_athlete" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "core_participation" ADD CONSTRAINT "core_participation_match_id_bf1656f4_fk_core_match_id" FOREIGN KEY ("match_id") REFERENCES "core_match" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_participation_975a0aa5" ON "core_participation" ("athlete_id");
+CREATE INDEX "core_participation_ff9c4e4a" ON "core_participation" ("match_id");
+ALTER TABLE "core_passwordreset" ADD CONSTRAINT "core_passwordreset_user_id_b11f45c1_fk_auth_user_id" FOREIGN KEY ("user_id") REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_passwordreset_e8701ad4" ON "core_passwordreset" ("user_id");
+CREATE INDEX "core_passwordreset_token_35efe3a3_like" ON "core_passwordreset" ("token" varchar_pattern_ops);
+ALTER TABLE "core_team" ADD CONSTRAINT "core_team_city_id_990296ad_fk_core_city_id" FOREIGN KEY ("city_id") REFERENCES "core_city" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_team_c7141997" ON "core_team" ("city_id");
+ALTER TABLE "core_teamadmin" ADD CONSTRAINT "core_teamadmin_profile_id_91798614_fk_core_profile_id" FOREIGN KEY ("profile_id") REFERENCES "core_profile" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "core_teamadmin" ADD CONSTRAINT "core_teamadmin_team_id_a56e592a_fk_core_team_id" FOREIGN KEY ("team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_teamadmin_83a0eb3f" ON "core_teamadmin" ("profile_id");
+CREATE INDEX "core_teamadmin_f6a7ca40" ON "core_teamadmin" ("team_id");
+ALTER TABLE "core_profile" ADD CONSTRAINT "core_profile_user_id_bf8ada58_fk_auth_user_id" FOREIGN KEY ("user_id") REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_matchstat_f6a7ca40" ON "core_matchstat" ("team_id");
+ALTER TABLE "core_matchstat" ADD CONSTRAINT "core_matchstat_team_id_36e31a24_fk_core_team_id" FOREIGN KEY ("team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_matchstat_94757cae" ON "core_matchstat" ("type_id");
+ALTER TABLE "core_matchstat" ADD CONSTRAINT "core_matchstat_type_id_211f3fe7_fk_core_stattype_id" FOREIGN KEY ("type_id") REFERENCES "core_stattype" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_match_e5623f1e" ON "core_match" ("home_team_id");
+ALTER TABLE "core_match" ADD CONSTRAINT "core_match_home_team_id_1dc27130_fk_core_team_id" FOREIGN KEY ("home_team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_match_0fc7cc15" ON "core_match" ("visitor_team_id");
+ALTER TABLE "core_match" ADD CONSTRAINT "core_match_visitor_team_id_cea5543d_fk_core_team_id" FOREIGN KEY ("visitor_team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_city_d5582625" ON "core_city" ("state_id");
+ALTER TABLE "core_city" ADD CONSTRAINT "core_city_state_id_9aa9e056_fk_core_state_id" FOREIGN KEY ("state_id") REFERENCES "core_state" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_athlete_bce5bd07" ON "core_athlete" ("position_id");
+ALTER TABLE "core_athlete" ADD CONSTRAINT "core_athlete_position_id_5a9689d3_fk_core_position_id" FOREIGN KEY ("position_id") REFERENCES "core_position" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_athlete_83a0eb3f" ON "core_athlete" ("profile_id");
+ALTER TABLE "core_athlete" ADD CONSTRAINT "core_athlete_profile_id_4f14c388_fk_core_profile_id" FOREIGN KEY ("profile_id") REFERENCES "core_profile" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_athlete_f6a7ca40" ON "core_athlete" ("team_id");
+ALTER TABLE "core_athlete" ADD CONSTRAINT "core_athlete_team_id_9ff35180_fk_core_team_id" FOREIGN KEY ("team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+COMMIT;
+(vzpro) ~/Development/vzpro/varzeapro [master] $ pbcoy < ./manage.py sqlmigrate core 0001_initial
+-bash: pbcoy: command not found
+(vzpro) ~/Development/vzpro/varzeapro [master] $ pbcopy < ./manage.py sqlmigrate core 0001_initial
+(vzpro) ~/Development/vzpro/varzeapro [master] $ ./manage.py sqlmigrate core 0001_initial
+BEGIN;
+--
+-- Create model Arena
+--
+CREATE TABLE "core_arena" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(50) NOT NULL, "latitude" double precision NULL, "longitude" double precision NULL);
+--
+-- Create model Athlete
+--
+CREATE TABLE "core_athlete" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL);
+--
+-- Create model City
+--
+CREATE TABLE "core_city" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(45) NOT NULL);
+--
+-- Create model Match
+--
+CREATE TABLE "core_match" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "when" timestamp with time zone NOT NULL, "arena_id" integer NOT NULL);
+--
+-- Create model MatchStat
+--
+CREATE TABLE "core_matchstat" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "athlete_id" integer NULL, "match_id" integer NOT NULL);
+--
+-- Create model Participation
+--
+CREATE TABLE "core_participation" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "going" boolean NOT NULL, "reason_not_going" varchar(140) NOT NULL, "athlete_id" integer NOT NULL, "match_id" integer NOT NULL);
+--
+-- Create model PasswordReset
+--
+CREATE TABLE "core_passwordreset" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "token" varchar(128) NOT NULL UNIQUE, "is_active" boolean NOT NULL, "user_id" integer NOT NULL);
+--
+-- Create model Position
+--
+CREATE TABLE "core_position" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(45) NOT NULL);
+--
+-- Create model Profile
+--
+CREATE TABLE "core_profile" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "photo" varchar(100) NULL, "birthday" date NULL, "phone" varchar(11) NULL);
+--
+-- Create model State
+--
+CREATE TABLE "core_state" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(45) NOT NULL);
+--
+-- Create model StatType
+--
+CREATE TABLE "core_stattype" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "name" varchar(50) NOT NULL);
+--
+-- Create model Team
+--
+CREATE TABLE "core_team" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "logo" varchar(100) NULL, "name" varchar(50) NOT NULL, "foundation" date NULL, "president" varchar(50) NULL, "city_id" integer NOT NULL);
+--
+-- Create model TeamAdmin
+--
+CREATE TABLE "core_teamadmin" ("id" serial NOT NULL PRIMARY KEY, "created" timestamp with time zone NOT NULL, "deleted" timestamp with time zone NULL, "profile_id" integer NOT NULL, "team_id" integer NOT NULL);
+--
+-- Add field teams to profile
+--
+--
+-- Add field user to profile
+--
+ALTER TABLE "core_profile" ADD COLUMN "user_id" integer NOT NULL UNIQUE;
+ALTER TABLE "core_profile" ALTER COLUMN "user_id" DROP DEFAULT;
+--
+-- Add field team to matchstat
+--
+ALTER TABLE "core_matchstat" ADD COLUMN "team_id" integer NULL;
+ALTER TABLE "core_matchstat" ALTER COLUMN "team_id" DROP DEFAULT;
+--
+-- Add field type to matchstat
+--
+ALTER TABLE "core_matchstat" ADD COLUMN "type_id" integer NOT NULL;
+ALTER TABLE "core_matchstat" ALTER COLUMN "type_id" DROP DEFAULT;
+--
+-- Add field home_team to match
+--
+ALTER TABLE "core_match" ADD COLUMN "home_team_id" integer NOT NULL;
+ALTER TABLE "core_match" ALTER COLUMN "home_team_id" DROP DEFAULT;
+--
+-- Add field visitor_team to match
+--
+ALTER TABLE "core_match" ADD COLUMN "visitor_team_id" integer NOT NULL;
+ALTER TABLE "core_match" ALTER COLUMN "visitor_team_id" DROP DEFAULT;
+--
+-- Add field state to city
+--
+ALTER TABLE "core_city" ADD COLUMN "state_id" integer NOT NULL;
+ALTER TABLE "core_city" ALTER COLUMN "state_id" DROP DEFAULT;
+--
+-- Add field position to athlete
+--
+ALTER TABLE "core_athlete" ADD COLUMN "position_id" integer NOT NULL;
+ALTER TABLE "core_athlete" ALTER COLUMN "position_id" DROP DEFAULT;
+--
+-- Add field profile to athlete
+--
+ALTER TABLE "core_athlete" ADD COLUMN "profile_id" integer NOT NULL;
+ALTER TABLE "core_athlete" ALTER COLUMN "profile_id" DROP DEFAULT;
+--
+-- Add field team to athlete
+--
+ALTER TABLE "core_athlete" ADD COLUMN "team_id" integer NOT NULL;
+ALTER TABLE "core_athlete" ALTER COLUMN "team_id" DROP DEFAULT;
+ALTER TABLE "core_match" ADD CONSTRAINT "core_match_arena_id_ef50445f_fk_core_arena_id" FOREIGN KEY ("arena_id") REFERENCES "core_arena" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_match_b297cc0f" ON "core_match" ("arena_id");
+ALTER TABLE "core_matchstat" ADD CONSTRAINT "core_matchstat_athlete_id_9ffcd6fd_fk_core_athlete_id" FOREIGN KEY ("athlete_id") REFERENCES "core_athlete" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "core_matchstat" ADD CONSTRAINT "core_matchstat_match_id_f729a9fd_fk_core_match_id" FOREIGN KEY ("match_id") REFERENCES "core_match" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_matchstat_975a0aa5" ON "core_matchstat" ("athlete_id");
+CREATE INDEX "core_matchstat_ff9c4e4a" ON "core_matchstat" ("match_id");
+ALTER TABLE "core_participation" ADD CONSTRAINT "core_participation_athlete_id_6b115b03_fk_core_athlete_id" FOREIGN KEY ("athlete_id") REFERENCES "core_athlete" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "core_participation" ADD CONSTRAINT "core_participation_match_id_bf1656f4_fk_core_match_id" FOREIGN KEY ("match_id") REFERENCES "core_match" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_participation_975a0aa5" ON "core_participation" ("athlete_id");
+CREATE INDEX "core_participation_ff9c4e4a" ON "core_participation" ("match_id");
+ALTER TABLE "core_passwordreset" ADD CONSTRAINT "core_passwordreset_user_id_b11f45c1_fk_auth_user_id" FOREIGN KEY ("user_id") REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_passwordreset_e8701ad4" ON "core_passwordreset" ("user_id");
+CREATE INDEX "core_passwordreset_token_35efe3a3_like" ON "core_passwordreset" ("token" varchar_pattern_ops);
+ALTER TABLE "core_team" ADD CONSTRAINT "core_team_city_id_990296ad_fk_core_city_id" FOREIGN KEY ("city_id") REFERENCES "core_city" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_team_c7141997" ON "core_team" ("city_id");
+ALTER TABLE "core_teamadmin" ADD CONSTRAINT "core_teamadmin_profile_id_91798614_fk_core_profile_id" FOREIGN KEY ("profile_id") REFERENCES "core_profile" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "core_teamadmin" ADD CONSTRAINT "core_teamadmin_team_id_a56e592a_fk_core_team_id" FOREIGN KEY ("team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_teamadmin_83a0eb3f" ON "core_teamadmin" ("profile_id");
+CREATE INDEX "core_teamadmin_f6a7ca40" ON "core_teamadmin" ("team_id");
+ALTER TABLE "core_profile" ADD CONSTRAINT "core_profile_user_id_bf8ada58_fk_auth_user_id" FOREIGN KEY ("user_id") REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_matchstat_f6a7ca40" ON "core_matchstat" ("team_id");
+ALTER TABLE "core_matchstat" ADD CONSTRAINT "core_matchstat_team_id_36e31a24_fk_core_team_id" FOREIGN KEY ("team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_matchstat_94757cae" ON "core_matchstat" ("type_id");
+ALTER TABLE "core_matchstat" ADD CONSTRAINT "core_matchstat_type_id_211f3fe7_fk_core_stattype_id" FOREIGN KEY ("type_id") REFERENCES "core_stattype" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_match_e5623f1e" ON "core_match" ("home_team_id");
+ALTER TABLE "core_match" ADD CONSTRAINT "core_match_home_team_id_1dc27130_fk_core_team_id" FOREIGN KEY ("home_team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_match_0fc7cc15" ON "core_match" ("visitor_team_id");
+ALTER TABLE "core_match" ADD CONSTRAINT "core_match_visitor_team_id_cea5543d_fk_core_team_id" FOREIGN KEY ("visitor_team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_city_d5582625" ON "core_city" ("state_id");
+ALTER TABLE "core_city" ADD CONSTRAINT "core_city_state_id_9aa9e056_fk_core_state_id" FOREIGN KEY ("state_id") REFERENCES "core_state" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_athlete_bce5bd07" ON "core_athlete" ("position_id");
+ALTER TABLE "core_athlete" ADD CONSTRAINT "core_athlete_position_id_5a9689d3_fk_core_position_id" FOREIGN KEY ("position_id") REFERENCES "core_position" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_athlete_83a0eb3f" ON "core_athlete" ("profile_id");
+ALTER TABLE "core_athlete" ADD CONSTRAINT "core_athlete_profile_id_4f14c388_fk_core_profile_id" FOREIGN KEY ("profile_id") REFERENCES "core_profile" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "core_athlete_f6a7ca40" ON "core_athlete" ("team_id");
+ALTER TABLE "core_athlete" ADD CONSTRAINT "core_athlete_team_id_9ff35180_fk_core_team_id" FOREIGN KEY ("team_id") REFERENCES "core_team" ("id") DEFERRABLE INITIALLY DEFERRED;
+COMMIT;
+```
+
 ## 8 INSERT APLICADO NAS TABELAS DO BANCO DE DADOS
 ### 8.1 DETALHAMENTO DAS INFORMAÇÕES
 Após clonar o projeto, crie um arquivo `settings_secret.py` no diretório [varzeapro](https://github.com/igorbelo/varzeapro/tree/master/varzeapro) e insira os dados de conexão do banco e uma `SECRET_KEY` da seguinte forma:
