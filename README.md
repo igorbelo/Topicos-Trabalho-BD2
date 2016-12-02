@@ -18,7 +18,7 @@ VarzeaPro é um sistema voltado para administradores de equipes de várzea. O us
 ### 5.1 NOTACAO ENTIDADE RELACIONAMENTO
 ![modelo conceitual](./conceitual.jpg "Modelo Conceitual")
 ### 5.2 DECISÕES DE PROJETO
-    Estatísticas da Partida: A decisão de colocar as estatísticas é para garantir uma certa escalabilidade. Futuramente caso sejam necessárias novas estatísticas novas colunas não precisam ser criadas. Além disso, garante que as estatísticas possam se relacionar com dados/tabelas, por exemplo: qual o tempo de jogo em que ocorreu um evento? A princípio essa informação não é armazenada mas facilmente adicionada sem muitos efeitos colaterais e "workarounds".
+Estatísticas da Partida: A decisão de colocar as estatísticas é para garantir uma certa escalabilidade. Futuramente caso sejam necessárias novas estatísticas novas colunas não precisam ser criadas. Além disso, garante que as estatísticas possam se relacionar com dados/tabelas, por exemplo: qual o tempo de jogo em que ocorreu um evento? A princípio essa informação não é armazenada mas facilmente adicionada sem muitos efeitos colaterais e "workarounds".
 
 ## 6 MODELO LÓGICO
 ![modelo lógico](./logico.jpg "Modelo Lógico")
@@ -167,6 +167,12 @@ COMMIT;
 
 ## 8 INSERT APLICADO NAS TABELAS DO BANCO DE DADOS
 ### 8.1 DETALHAMENTO DAS INFORMAÇÕES
+a) Os dados são gerados randomicamente utilizando a biblioteca faker do python.
+b) ...
+c) https://www.djangoproject.com/
+https://www.postgresql.org/docs/
+
+### 8.2 INCLUSÃO DO SCRIPT PARA CRIAÇÃO DE TABELA E INSERÇÃO DOS DADOS
 Após clonar o projeto, crie um arquivo `settings_secret.py` no diretório [varzeapro](https://github.com/igorbelo/varzeapro/tree/master/varzeapro) e insira os dados de conexão do banco e uma `SECRET_KEY` da seguinte forma:
 ```
 SECRET_KEY = '[string aleatória]'
@@ -192,7 +198,6 @@ Por fim, execute o comando que irá criar as tabelas
 python manage.py migrate
 ```
 
-### 8.2 INCLUSÃO DO SCRIPT PARA CRIAÇÃO DE TABELA E INSERÇÃO DOS DADOS
 Para popular o banco, execute o comando:
 ```
 python manage.py populate_db
@@ -268,11 +273,6 @@ GROUP BY core_athlete.id, speed, technique, intelligence, physique, athlete_posi
 ### 9.4	LISTA DE CODIGOS DAS FUNÇÕES, ASSERÇOES E TRIGGERS
 
 ### 9.5	APLICAÇAO DE ÍNDICES E TESTES DE PERFORMANCE
-    a) Lista de índices, tipos de índices com explicação de porque foram implementados
-    b) Performance esperada VS Resultados obtidos
-    c) Tabela de resultados comparando velocidades antes e depois da aplicação dos índices.
-
-    Data de Entrega: 16/11/2016
 
 ### 9.6	ANÁLISE DOS DADOS COM RAPIDMINER
 #### Posição X Físico
@@ -298,6 +298,5 @@ GROUP BY core_athlete.id, speed, technique, intelligence, physique, athlete_posi
 
 ## 10 ATUALIZAÇÃO DA DOCUMENTAÇÃO/SLIDES E ENTREGA FINAL
 
-    Data de Entrega: 23/11/2016
-
 ## 11 DIFICULDADES ENCONTRADAS PELO GRUPO
+A maior dificuldade foi na análise dos dados. Como a natureza dos dados é aleatória, foi difícil identificar padrões nas análises.
