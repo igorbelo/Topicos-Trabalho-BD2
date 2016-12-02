@@ -168,8 +168,11 @@ COMMIT;
 ## 8 INSERT APLICADO NAS TABELAS DO BANCO DE DADOS
 ### 8.1 DETALHAMENTO DAS INFORMAÇÕES
 a) Os dados são gerados randomicamente utilizando a biblioteca faker do python.
+
 b) ...
+
 c) https://www.djangoproject.com/
+
 https://www.postgresql.org/docs/
 
 ### 8.2 INCLUSÃO DO SCRIPT PARA CRIAÇÃO DE TABELA E INSERÇÃO DOS DADOS
