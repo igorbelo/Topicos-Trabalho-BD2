@@ -276,6 +276,9 @@ GROUP BY core_athlete.id, speed, technique, intelligence, physique, athlete_posi
 ### 9.4	LISTA DE CODIGOS DAS FUNÇÕES, ASSERÇOES E TRIGGERS
 
 ### 9.5	APLICAÇAO DE ÍNDICES E TESTES DE PERFORMANCE
+![índices](./indices.png "Índices")
+![performance sem índice](./performance1.png "Performance sem índice")
+![performance com índice](./performance2.png "Performance com índice")
 
 ### 9.6	ANÁLISE DOS DADOS COM RAPIDMINER
 #### Posição X Físico
