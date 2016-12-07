@@ -296,6 +296,15 @@ GROUP BY core_athlete.id, speed, technique, intelligence, physique, athlete_posi
 #### Posição X Gols
 ![posição x gols](./posicao-gols.png "Posição X Gols")
 
+#### Gols X (Posição e Velocidade)
+![posição x gols](./golsXposicao-velocidade.png "Gols X (Posição e Velocidade)")
+
+#### Gols X (Posição e Inteligência)
+![posição x gols](./golsXposicao-inteligencia.png "Gols X (Posição e Inteligência)")
+
+#### Gols X (Posição e Físico)
+![posição x gols](./golsXposicao-fisico.png "Gols X (Posição e Físico)")
+
 #### Decisão de Posição por físico e inteligência
 ![árvore de decisão: posição por físico e inteligência](./posicao-fisico-inteligencia.png "Posição por físico e inteligência")
 
